@@ -1,49 +1,52 @@
-let c = document.getElementById("game");
+let c = document.getElementById("canvas");
 let ctx = c.getContext("2d");
-let planes = new (400,100,10,50);
-let barrier = new Barrier(150,0,30);
+let car = new Car(20, 450, 30, 50,);
+let obstacle = new Obstacle(300, -15, 30);
 
-// Tao nut di chuyen
-function moveplanes(){
+// sự kiện bàn phím
+function moveCar() {
     switch (event.keyCode){
-        case 37:{
-            planes.moveLeft();
+        case 37: {
+            car.moveLeft();
             break;
         }
-        case 38:{
-            planes.moveUp();
+        case 38: {
+            car.moveUp();
             break;
-        }case 39:{
-            planes.moveRight();
+        }
+        case 39: {
+            car.moveRight();
             break;
-        }case 40:{
-            planes.moveDown();
+        }
+        case 40: {
+            car.moveDown();
             break;
         }
     }
     clearCanvas();
-    planes.drawPlanes(ctx);
+    car.drawCar(ctx);
 }
 
-function movebarrier(){
-    if(checkBarrier() === true){
-        location.reload();
-        clearInterval(intervalId)
-        alert("Game Over");
-    }
-    if (obstacle.y >= 450){
-        obstacle.y = 0;
-    }
-    obstacle.moveDown();
-    clearCanvas();
-    drawCanvas();
+// Kết thúc trò chới
+function moveObstacle() {
+        if (checkCollision() === true) {
+            location.reload();
+            clearInterval(intervalId)
+            alert("Game Over");
+        }
+        if (obstacle.y >= 450){
+            obstacle.y = 0;
+        }
+        obstacle.moveDown();
+        clearCanvas();
+        drawCanvas();
 }
 
-function drawCanvas(){
-    barrier.drawBarrier(ctx);
-    planes.drawPlanes()
+function drawCanvas() {
+    obstacle.drawObstacle(ctx);
+    car.drawCar(ctx);
 }
-
+// Sử lý va chạm
 function checkCollision() {
     if (((car.x <= obstacle.x + obstacle.radius && obstacle.x + obstacle.radius <= car.x + car.width) &&
         car.y <= obstacle.y + obstacle.radius && obstacle.y + obstacle.radius <= car.y + car.height)) {
@@ -63,6 +66,7 @@ function clearCanvas() {
 }
 
 let intervalId = setInterval(moveObstacle, 1000) //ms => 1000ms = 1s
+
 
 car.drawCar(ctx);
 obstacle.drawObstacle(ctx);
